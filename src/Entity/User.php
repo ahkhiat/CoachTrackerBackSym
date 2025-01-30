@@ -3,12 +3,18 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Metadata\ApiResource;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ApiResource]
+
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -50,6 +56,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
+
+    /**
+     * @var Collection<int, UserIsParentOf>
+     */
+    #[ORM\OneToMany(targetEntity: UserIsParentOf::class, mappedBy: 'user')]
+    private Collection $userIsParentOfs;
+
+    public function __construct()
+    {
+        $this->userIsParentOfs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -200,6 +217,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserIsParentOf>
+     */
+    public function getUserIsParentOfs(): Collection
+    {
+        return $this->userIsParentOfs;
+    }
+
+    public function addUserIsParentOf(UserIsParentOf $userIsParentOf): static
+    {
+        if (!$this->userIsParentOfs->contains($userIsParentOf)) {
+            $this->userIsParentOfs->add($userIsParentOf);
+            $userIsParentOf->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserIsParentOf(UserIsParentOf $userIsParentOf): static
+    {
+        if ($this->userIsParentOfs->removeElement($userIsParentOf)) {
+            // set the owning side to null (unless already changed)
+            if ($userIsParentOf->getUser() === $this) {
+                $userIsParentOf->setUser(null);
+            }
+        }
 
         return $this;
     }

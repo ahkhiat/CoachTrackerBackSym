@@ -4,8 +4,12 @@ namespace App\Entity;
 
 use App\Repository\RoleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
+#[ApiResource]
+
 class Role
 {
     #[ORM\Id]
@@ -16,6 +20,10 @@ class Role
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    public function __toString()
+    {
+        return $this->name;
+    }
     public function getId(): ?int
     {
         return $this->id;
