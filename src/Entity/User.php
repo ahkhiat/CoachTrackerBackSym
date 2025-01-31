@@ -63,6 +63,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UserIsParentOf::class, mappedBy: 'user')]
     private Collection $userIsParentOfs;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Coach $coach = null;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Player $player = null;
+
     public function __construct()
     {
         $this->userIsParentOfs = new ArrayCollection();
@@ -247,6 +253,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $userIsParentOf->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCoach(): ?Coach
+    {
+        return $this->coach;
+    }
+
+    public function setCoach(Coach $coach): static
+    {
+        // set the owning side of the relation if necessary
+        if ($coach->getUser() !== $this) {
+            $coach->setUser($this);
+        }
+
+        $this->coach = $coach;
+
+        return $this;
+    }
+
+    public function getPlayer(): ?Player
+    {
+        return $this->player;
+    }
+
+    public function setPlayer(Player $player): static
+    {
+        // set the owning side of the relation if necessary
+        if ($player->getUser() !== $this) {
+            $player->setUser($this);
+        }
+
+        $this->player = $player;
 
         return $this;
     }

@@ -32,10 +32,21 @@ class Player
     #[ORM\ManyToOne(inversedBy: 'players')]
     private ?Team $plays_in = null;
 
+    #[ORM\OneToOne(inversedBy: 'player', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    /**
+     * @var Collection<int, Convocation>
+     */
+    #[ORM\OneToMany(targetEntity: Convocation::class, mappedBy: 'player')]
+    private Collection $convocations;
+
     public function __construct()
     {
         $this->goals = new ArrayCollection();
         $this->presences = new ArrayCollection();
+        $this->convocations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -111,6 +122,48 @@ class Player
     public function setPlaysIn(?Team $plays_in): static
     {
         $this->plays_in = $plays_in;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Convocation>
+     */
+    public function getConvocations(): Collection
+    {
+        return $this->convocations;
+    }
+
+    public function addConvocation(Convocation $convocation): static
+    {
+        if (!$this->convocations->contains($convocation)) {
+            $this->convocations->add($convocation);
+            $convocation->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConvocation(Convocation $convocation): static
+    {
+        if ($this->convocations->removeElement($convocation)) {
+            // set the owning side to null (unless already changed)
+            if ($convocation->getPlayer() === $this) {
+                $convocation->setPlayer(null);
+            }
+        }
 
         return $this;
     }

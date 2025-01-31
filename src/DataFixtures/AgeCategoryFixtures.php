@@ -4,10 +4,16 @@ namespace App\DataFixtures;
 
 use App\Entity\AgeCategory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class AgeCategoryFixtures extends Fixture
+class AgeCategoryFixtures extends Fixture implements FixtureGroupInterface
 {
+    public static function getGroups(): array
+    {
+        return ['group1'];
+    }
+
     public function load(ObjectManager $manager): void
     {
         $categoriesF = ['U8F', 'U9F', 'U10F', 'U11F', 'U12F', 'U13F', 'U14F', 'U15F'];

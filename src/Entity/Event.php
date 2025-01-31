@@ -2,23 +2,31 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use App\Repository\EventRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\EventRepository;
+use ApiPlatform\Metadata\ApiResource;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['event:read']],
+    denormalizationContext: ['groups' => ['event:write']]
+)]
 class Event
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['event:read'])]
+
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['event:read', 'event:write'])]
+
     private ?\DateTimeInterface $date = null;
 
     /**
@@ -29,22 +37,32 @@ class Event
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['event:read', 'event:write'])]
+
     private ?EventType $event_type = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['event:read', 'event:write'])]
+
     private ?Team $team = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['event:read', 'event:write'])]
+
     private ?VisitorTeam $visitor_team = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['event:read', 'event:write'])]
+
     private ?Stadium $stadium = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['event:read', 'event:write'])]
+
     private ?Season $season = null;
 
     /**
@@ -53,10 +71,17 @@ class Event
     #[ORM\OneToMany(targetEntity: Presence::class, mappedBy: 'event')]
     private Collection $presences;
 
+    /**
+     * @var Collection<int, Convocation>
+     */
+    #[ORM\OneToMany(targetEntity: Convocation::class, mappedBy: 'event')]
+    private Collection $convocations;
+
     public function __construct()
     {
         $this->goals = new ArrayCollection();
         $this->presences = new ArrayCollection();
+        $this->convocations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -190,6 +215,36 @@ class Event
             // set the owning side to null (unless already changed)
             if ($presence->getEvent() === $this) {
                 $presence->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Convocation>
+     */
+    public function getConvocations(): Collection
+    {
+        return $this->convocations;
+    }
+
+    public function addConvocation(Convocation $convocation): static
+    {
+        if (!$this->convocations->contains($convocation)) {
+            $this->convocations->add($convocation);
+            $convocation->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConvocation(Convocation $convocation): static
+    {
+        if ($this->convocations->removeElement($convocation)) {
+            // set the owning side to null (unless already changed)
+            if ($convocation->getEvent() === $this) {
+                $convocation->setEvent(null);
             }
         }
 

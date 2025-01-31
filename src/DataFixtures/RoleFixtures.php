@@ -4,10 +4,16 @@ namespace App\DataFixtures;
 
 use App\Entity\Role;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class RoleFixtures extends Fixture
+class RoleFixtures extends Fixture implements FixtureGroupInterface
 {
+    public static function getGroups(): array
+    {
+        return ['group1'];
+    }
+
     public function load(ObjectManager $manager): void
     {
     
