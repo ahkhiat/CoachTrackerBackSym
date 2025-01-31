@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\VisitorTeamRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: VisitorTeamRepository::class)]
 #[ApiResource]
@@ -26,10 +27,14 @@ class VisitorTeam
 
     #[ORM\ManyToOne(inversedBy: 'visitorTeams')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['event:read', 'event:write'])]
+
     private ?Club $club = null;
 
     #[ORM\ManyToOne(inversedBy: 'visitorTeams')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['event:read', 'event:write'])]
+
     private ?AgeCategory $age_category = null;
 
     public function __construct()

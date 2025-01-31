@@ -35,7 +35,7 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         $usersCoach = [
             ['firstname' => 'Sam', 'lastname' => 'Hetfield', 'birthdate' => '1983-08-15', 'email' => 'sam@gmail.com', 'password' => 'password123'],
             ['firstname' => 'Fred', 'lastname' => 'Newsted', 'birthdate' => '1985-06-24', 'email' => 'fred@gmail.com', 'password' => 'password123'],
-            ['firstname' => 'Sonny', 'lastname' => 'Trujillo', 'birthdate' => '1987-18-03', 'email' => 'sonny@gmail.com', 'password' => 'password123'],
+            ['firstname' => 'Sonny', 'lastname' => 'Trujillo', 'birthdate' => '1987-08-03', 'email' => 'sonny@gmail.com', 'password' => 'password123'],
             ['firstname' => 'Amar', 'lastname' => 'Hammet', 'birthdate' => '1992-12-11', 'email' => 'amar@gmail.com', 'password' => 'password123'],
         ];
 
