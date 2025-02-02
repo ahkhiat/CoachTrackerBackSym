@@ -32,7 +32,7 @@ class Event
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Groups(['event:read', 'event:write'])]
 
-    private ?\DateTimeInterface $date = null;
+    private ?\DateTime $date = null;
 
     /**
      * @var Collection<int, Goal>
@@ -94,9 +94,14 @@ class Event
         return $this->id;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    // public function getDate(): ?\DateTimeInterface
+    // {
+    //     return $this->date;
+    // }
+
+    public function getDate(): string
     {
-        return $this->date;
+        return $this->date->format(\DateTime::ATOM); // Format ISO 8601
     }
 
     public function setDate(\DateTimeInterface $date): static
