@@ -11,11 +11,27 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
+
+
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
+// #[ApiResource(
+//     normalizationContext: ['groups' => ['event:read']],
+//     denormalizationContext: ['groups' => ['event:write']],
+    
+// )]
 #[ApiResource(
-    normalizationContext: ['groups' => ['event:read']],
-    denormalizationContext: ['groups' => ['event:write']]
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => ['event:collection:read']],
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['event:item:read']],
+        ),
+        // Ajoutez d'autres opérations si nécessaire
+    ],
 )]
 #[ApiFilter(SearchFilter::class, properties: ['team' => 'exact'])]
 
@@ -25,12 +41,12 @@ class Event
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['event:read'])]
+    #[Groups(['event:collection:read', 'event:item:read'])]
 
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups(['event:collection:read', 'event:item:read'])]
 
     private ?\DateTime $date = null;
 
@@ -42,31 +58,31 @@ class Event
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups(['event:collection:read', 'event:item:read'])]
 
     private ?EventType $event_type = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups(['event:collection:read', 'event:item:read'])]
 
     private ?Team $team = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups(['event:collection:read', 'event:item:read'])]
 
     private ?VisitorTeam $visitor_team = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups(['event:collection:read', 'event:item:read'])]
 
     private ?Stadium $stadium = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups(['event:collection:read', 'event:item:read'])]
 
     private ?Season $season = null;
 
@@ -74,12 +90,14 @@ class Event
      * @var Collection<int, Presence>
      */
     #[ORM\OneToMany(targetEntity: Presence::class, mappedBy: 'event')]
+    #[Groups(['event:item:read'])]
     private Collection $presences;
 
     /**
      * @var Collection<int, Convocation>
      */
     #[ORM\OneToMany(targetEntity: Convocation::class, mappedBy: 'event')]
+    #[Groups(['event:item:read'])]
     private Collection $convocations;
 
     public function __construct()

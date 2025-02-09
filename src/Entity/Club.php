@@ -19,7 +19,7 @@ class Club
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups(['event:collection:read', 'event:item:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
@@ -32,7 +32,7 @@ class Club
     private ?string $town = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups(['event:collection:read', 'event:item:read'])]
     private ?string $image_name = null;
 
     /**

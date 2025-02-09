@@ -19,16 +19,22 @@ class Stadium
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups(['event:collection:read', 'event:item:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['event:item:read'])]
+
     private ?string $adress = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['event:item:read'])]
+
     private ?string $postal_code = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['event:item:read'])]
+
     private ?string $town = null;
 
     /**

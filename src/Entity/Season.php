@@ -19,7 +19,7 @@ class Season
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups(['event:collection:read', 'event:item:read'])]
     private ?string $name = null;
 
     /**

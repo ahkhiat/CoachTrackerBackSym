@@ -27,13 +27,13 @@ class VisitorTeam
 
     #[ORM\ManyToOne(inversedBy: 'visitorTeams')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups(['event:collection:read', 'event:item:read'])]
 
     private ?Club $club = null;
 
     #[ORM\ManyToOne(inversedBy: 'visitorTeams')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups(['event:collection:read', 'event:item:read'])]
 
     private ?AgeCategory $age_category = null;
 

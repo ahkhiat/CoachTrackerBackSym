@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ConvocationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: ConvocationRepository::class)]
 #[ApiResource]
@@ -20,6 +22,8 @@ class Convocation
 
     #[ORM\ManyToOne(inversedBy: 'convocations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['event:item:read'])]
+
     private ?Player $player = null;
 
     #[ORM\ManyToOne(inversedBy: 'convocations')]

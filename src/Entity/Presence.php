@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PresenceRepository;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PresenceRepository::class)]
 #[ApiResource]
@@ -16,10 +17,12 @@ class Presence
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['event:item:read'])]
     private ?bool $on_time = null;
 
     #[ORM\ManyToOne(inversedBy: 'presences')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['event:item:read'])]
     private ?Player $player = null;
 
     #[ORM\ManyToOne(inversedBy: 'presences')]
