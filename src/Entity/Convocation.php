@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ConvocationRepository;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 
@@ -18,12 +19,12 @@ class Convocation
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    #[Groups(['event:item:read'])]
+    private ?int $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'convocations')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['event:item:read'])]
-
     private ?Player $player = null;
 
     #[ORM\ManyToOne(inversedBy: 'convocations')]
@@ -35,38 +36,39 @@ class Convocation
         return $this->id;
     }
 
-    // public function getStatus(): ?string
-    // {
-    //     return $this->status;
-    // }
-
-    // public function setStatus(string $status): static
-    // {
-    //     $this->status = $status;
-
-    //     return $this;
-    // }
-    public const STATUS_PENDING = 'pending';
-    public const STATUS_ACCEPTED = 'accepted';
-    public const STATUS_REFUSED = 'refused';
-
-    public static function getAvailableStatuses(): array
+    public function getStatus(): ?int
     {
-        return [
-            self::STATUS_PENDING,
-            self::STATUS_ACCEPTED,
-            self::STATUS_REFUSED,
-        ];
+        return $this->status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(int $status): static
     {
-        if (!in_array($status, self::getAvailableStatuses())) {
-            throw new \InvalidArgumentException("Statut invalide");
-        }
         $this->status = $status;
+
         return $this;
     }
+    // public const STATUS_PENDING = 'pending';
+    // public const STATUS_ACCEPTED = 'accepted';
+    // public const STATUS_REFUSED = 'refused';
+
+    // #[ApiProperty]
+    // public static function getAvailableStatuses(): array
+    // {
+    //     return [
+    //         self::STATUS_PENDING,
+    //         self::STATUS_ACCEPTED,
+    //         self::STATUS_REFUSED,
+    //     ];
+    // }
+
+    // public function setStatus(string $status): self
+    // {
+    //     if (!in_array($status, self::getAvailableStatuses())) {
+    //         throw new \InvalidArgumentException("Statut invalide");
+    //     }
+    //     $this->status = $status;
+    //     return $this;
+    // }
 
     public function getPlayer(): ?Player
     {
