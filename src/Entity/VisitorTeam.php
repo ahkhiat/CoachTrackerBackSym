@@ -2,20 +2,32 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Get;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\VisitorTeamRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: VisitorTeamRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => ['visitorTeam:collection:read']],
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['visitorTeam:item:read']],
+        ),
+    ],
+)]
 class VisitorTeam
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['visitorTeam:collection:read', 'visitorTeam:item:read'])]
     private ?int $id = null;
 
     
@@ -27,7 +39,8 @@ class VisitorTeam
 
     #[ORM\ManyToOne(inversedBy: 'visitorTeams')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['event:collection:read', 'event:item:read'])]
+    #[Groups(['event:collection:read', 'event:item:read', 'visitorTeam:collection:read', 'visitorTeam:item:read'])]
+
 
     private ?Club $club = null;
 

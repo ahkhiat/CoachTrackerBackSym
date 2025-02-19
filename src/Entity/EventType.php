@@ -8,18 +8,31 @@ use App\Repository\EventTypeRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
 
 #[ORM\Entity(repositoryClass: EventTypeRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => ['eventType:collection:read']],
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['eventType:item:read']],
+        ),
+    ],
+)]
 class EventType
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['eventType:collection:read', 'eventType:item:read'])]
+
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['event:collection:read', 'event:item:read'])]
+    #[Groups(['event:collection:read', 'event:item:read', 'eventType:collection:read', 'eventType:item:read'])]
 
     private ?string $name = null;
 
