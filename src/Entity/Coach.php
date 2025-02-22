@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use App\Repository\CoachRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CoachRepository;
+use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CoachRepository::class)]
 #[ApiResource]
@@ -20,6 +21,8 @@ class Coach
 
     #[ORM\OneToOne(inversedBy: 'coach', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['team:item:read'])]
+
     private ?User $user = null;
 
 

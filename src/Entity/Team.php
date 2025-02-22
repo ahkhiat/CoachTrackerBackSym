@@ -2,31 +2,47 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Get;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TeamRepository;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => ['team:collection:read']],
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['team:item:read']],
+        ),
+    ],
+)]
 
 class Team
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['team:collection:read', 'team:item:read'])]
+
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['event:collection:read', 'event:item:read'])]
+    #[Groups(['event:collection:read', 'event:item:read', 'team:collection:read', 'team:item:read'])]
 
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'teams')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['team:collection:read', 'team:item:read'])]
+
     private ?AgeCategory $age_category = null;
 
     /**
@@ -39,12 +55,16 @@ class Team
      * @var Collection<int, Coach>
      */
     #[ORM\OneToMany(targetEntity: Coach::class, mappedBy: 'is_coach_of')]
+    #[Groups(['team:item:read'])]
+
     private Collection $coaches;
 
     /**
      * @var Collection<int, Player>
      */
     #[ORM\OneToMany(targetEntity: Player::class, mappedBy: 'plays_in')]
+    #[Groups(['team:item:read'])]
+
     private Collection $players;
 
     public function __construct()
@@ -70,6 +90,8 @@ class Team
 
         return $this;
     }
+
+    #[SerializedName('age_category')]
 
     public function getAgeCategory(): ?AgeCategory
     {
