@@ -22,6 +22,10 @@ final class UserController extends AbstractController
         $data = [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
+            'firstname' => $user->getFirstname(),
+            'lastname' => $user->getLastname(),
+            'birthdate' => $user->getBirthdate(),
+            'phone' => $user->getPhone(),
             'roles' => $user->getRoles(),
             'plays_in' => $user->getPlayer()?->getPlaysIn()?->getName(),
             'is_coach_of' => $user->getCoach()?->getIsCoachOf()?->getName()
