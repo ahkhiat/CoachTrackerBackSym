@@ -28,7 +28,8 @@ final class UserController extends AbstractController
             'phone' => $user->getPhone(),
             'roles' => $user->getRoles(),
             'plays_in' => $user->getPlayer()?->getPlaysIn()?->getName(),
-            'is_coach_of' => $user->getCoach()?->getIsCoachOf()?->getName()
+            'is_coach_of' => $user->getCoach()?->getIsCoachOf()?->getName(),
+            'is_parent_of' => $user->getUserIsParentOfs()
         ];
         return $this->json($data);
     }
