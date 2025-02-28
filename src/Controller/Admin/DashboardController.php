@@ -5,11 +5,14 @@ namespace App\Controller\Admin;
 use App\Entity\Club;
 use App\Entity\Team;
 use App\Entity\User;
+use App\Entity\Coach;
 use App\Entity\Event;
+use App\Entity\Player;
 use App\Entity\Season;
 use App\Entity\Stadium;
 use App\Entity\EventType;
 use App\Entity\AgeCategory;
+use App\Entity\UserIsParentOf;
 use App\Entity\VisitorTeam;
 use App\Repository\TeamRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,6 +57,10 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
 
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-list', entityFqcn: User::class);
+        yield MenuItem::linkToCrud('Coachs', 'fas fa-list', entityFqcn: Coach::class);
+        yield MenuItem::linkToCrud('Joueurs', 'fas fa-list', entityFqcn: Player::class);
+        yield MenuItem::linkToCrud('Parents', 'fas fa-list', entityFqcn: UserIsParentOf::class);
+
         yield MenuItem::linkToCrud('Evénements', 'fas fa-list', entityFqcn: Event::class);
         yield MenuItem::linkToCrud('Equipes', 'fas fa-users', entityFqcn: Team::class);
         yield MenuItem::linkToCrud('Equipes visiteuses', 'fas fa-users', entityFqcn: VisitorTeam::class);

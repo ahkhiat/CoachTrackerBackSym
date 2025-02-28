@@ -73,6 +73,10 @@ class Team
         $this->coaches = new ArrayCollection();
         $this->players = new ArrayCollection();
     }
+    public function __tostring()
+    {
+        return $this->name;
+    }
 
     public function getId(): ?int
     {

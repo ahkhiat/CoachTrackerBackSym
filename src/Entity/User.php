@@ -79,7 +79,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->userIsParentOfs = new ArrayCollection();
     }
-
+    public function __tostring()
+    {
+        return $this->firstname . " " . $this->lastname;
+    }
     public function getId(): ?int
     {
         return $this->id;
