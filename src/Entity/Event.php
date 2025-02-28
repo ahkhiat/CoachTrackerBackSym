@@ -33,7 +33,7 @@ use ApiPlatform\Metadata\Get;
         // Ajoutez d'autres opérations si nécessaire
     ],
 )]
-#[ApiFilter(SearchFilter::class, properties: ['team' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['team.name' => 'exact'])]
 
 
 class Event
