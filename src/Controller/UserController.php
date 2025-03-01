@@ -39,6 +39,10 @@ final class UserController extends AbstractController
                 'id' => $relation->getChild()->getId(),  
                 'firstname' => $relation->getChild()->getFirstname(),
                 'lastname' => $relation->getChild()->getLastname(),
+                'plays_in' => [
+                    'id' => $relation->getChild()->getPlaysIn()?->getId(),
+                    'name' => $relation->getChild()->getPlaysIn()?->getName(),
+                ],
             ], $user->getUserIsParentOfs()->toArray()),
         ];
         return $this->json($data);
