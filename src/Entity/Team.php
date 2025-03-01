@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
@@ -24,6 +25,8 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         ),
     ],
 )]
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'exact'])]
+
 
 class Team
 {

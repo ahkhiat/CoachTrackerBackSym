@@ -27,8 +27,14 @@ final class UserController extends AbstractController
             'birthdate' => $user->getBirthdate()?->format('Y-m-d'),
             'phone' => $user->getPhone(),
             'roles' => $user->getRoles(),
-            'plays_in' => $user->getPlayer()?->getPlaysIn()?->getName(),
-            'is_coach_of' => $user->getCoach()?->getIsCoachOf()?->getName(),
+            'plays_in' => [
+                'id' => $user->getPlayer()?->getPlaysIn()?->getId(),
+                'name' => $user->getPlayer()?->getPlaysIn()?->getName(),
+            ],
+            'is_coach_of' => [
+                'id' => $user->getCoach()?->getIsCoachOf()?->getId(),
+                'name' => $user->getCoach()?->getIsCoachOf()?->getName(),
+            ],
             'is_parent_of' => $user->getUserIsParentOfs()
         ];
         return $this->json($data);
