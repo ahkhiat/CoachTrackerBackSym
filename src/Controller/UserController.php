@@ -36,9 +36,9 @@ final class UserController extends AbstractController
                 'name' => $user->getCoach()?->getIsCoachOf()?->getName(),
             ],
             'is_parent_of' => array_map(fn($relation) => [
-                'id' => $relation->getChildId()->getId(),  
-                'firstname' => $relation->getChildId()->getFirstname(),
-                'lastname' => $relation->getChildId()->getLastname(),
+                'id' => $relation->getChild()->getId(),  
+                'firstname' => $relation->getChild()->getFirstname(),
+                'lastname' => $relation->getChild()->getLastname(),
             ], $user->getUserIsParentOfs()->toArray()),
         ];
         return $this->json($data);
