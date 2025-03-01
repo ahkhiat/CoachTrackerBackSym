@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Player;
+use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -19,7 +20,15 @@ class PlayerCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            AssociationField::new('user', 'Utilisateur'),
+            AssociationField::new('user', 'Utilisateur')
+                ->setQueryBuilder(function (QueryBuilder $qb) {
+                    return $qb
+                        ->leftJoin('entity.player', 'p')
+                        ->leftJoin('entity.coach', 'c')
+                        ->where('p.id IS NULL')
+                        ->andWhere('c.id IS NULL'); 
+                }),
+    
             AssociationField::new('plays_in', 'Joue dans l\'équipe'),
         ];
     }
