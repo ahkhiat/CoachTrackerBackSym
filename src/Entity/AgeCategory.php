@@ -19,7 +19,7 @@ class AgeCategory
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['event:collection:read', 'event:item:read', 'team:collection:read', 'team:item:read'])]
+    #[Groups(['event:collection:read', 'event:item:read', 'team:collection:read', 'team:item:read', 'visitorTeam:collection:read', 'visitorTeam:item:read'])]
     private ?string $name = null;
 
     /**

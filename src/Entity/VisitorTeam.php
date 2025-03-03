@@ -46,7 +46,7 @@ class VisitorTeam
 
     #[ORM\ManyToOne(inversedBy: 'visitorTeams')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['event:collection:read', 'event:item:read'])]
+    #[Groups(['event:collection:read', 'event:item:read', 'visitorTeam:collection:read', 'visitorTeam:item:read'])]
 
     private ?AgeCategory $age_category = null;
 
