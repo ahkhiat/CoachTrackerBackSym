@@ -26,11 +26,13 @@ final class EventController extends AbstractController
     
         $eventType = $em->getRepository(EventType::class)->find($data['eventTypeId']);
         $team = $em->getRepository(Team::class)->find($data['teamId']);
-        $visitorTeam = $em->getRepository(VisitorTeam::class)->find($data['visitorTeamId']);
+        $visitorTeam = isset($data['visitorTeamId']) ? 
+            $em->getRepository(VisitorTeam::class)
+            ->find($data['visitorTeamId']) : null;
         $stadium = $em->getRepository(Stadium::class)->find($data['stadiumId']);
         $season = $em->getRepository(Season::class)->find($data['seasonId']);
     
-        if (!$eventType || !$team || !$visitorTeam || !$stadium || !$season) {
+        if (!$eventType || !$team || !$stadium || !$season) {
             return $this->json(['error' => 'Invalid data provided'], Response::HTTP_BAD_REQUEST);
         }
     
@@ -38,9 +40,12 @@ final class EventController extends AbstractController
         $event->setDate(new \DateTime($data['date']));
         $event->setEventType($eventType);
         $event->setTeam($team);
-        $event->setVisitorTeam($visitorTeam);
         $event->setStadium($stadium);
         $event->setSeason($season);
+
+        if ($visitorTeam !== null) {
+            $event->setVisitorTeam($visitorTeam);
+        }
     
         $em->persist($event);
     
