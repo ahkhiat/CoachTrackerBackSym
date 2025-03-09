@@ -34,7 +34,7 @@ use ApiPlatform\Metadata\Get;
     ],
 )]
 #[ApiFilter(SearchFilter::class, properties: ['team.name' => 'exact'])]
-
+#[ApiFilter(OrderFilter::class, properties: ['eventDate' => 'ASC'])]
 
 class Event
 {
