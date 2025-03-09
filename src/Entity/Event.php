@@ -35,7 +35,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
 )]
 #[ApiFilter(SearchFilter::class, properties: ['team.name' => 'exact'])]
-#[ApiFilter(OrderFilter::class, properties: ['event.date' => 'ASC'])]
+#[ApiFilter(OrderFilter::class, properties: ['date' => 'ASC'])]
 
 class Event
 {
