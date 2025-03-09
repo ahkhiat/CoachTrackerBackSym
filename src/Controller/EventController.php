@@ -44,21 +44,21 @@ final class EventController extends AbstractController
     
         $em->persist($event);
     
-        foreach ($data['convocations'] as $convocationData) {
-            $convocation = new Convocation();
-            $player = $em->getRepository(Player::class)->find($convocationData['playerId']);
-            if (!$player) {
-                return $this->json(['error' => 'Player not found'], Response::HTTP_BAD_REQUEST);
-            }
-            $convocation->setEvent($event);
-            $convocation->setPlayer($player);
-            $convocation->setStatus($convocationData['status']);
+        // foreach ($data['convocations'] as $convocationData) {
+        //     $convocation = new Convocation();
+        //     $player = $em->getRepository(Player::class)->find($convocationData['playerId']);
+        //     if (!$player) {
+        //         return $this->json(['error' => 'Player not found'], Response::HTTP_BAD_REQUEST);
+        //     }
+        //     $convocation->setEvent($event);
+        //     $convocation->setPlayer($player);
+        //     $convocation->setStatus($convocationData['status']);
     
-            $em->persist($convocation);
-        }
+        //     $em->persist($convocation);
+        // }
 
         $em->flush();
-        return $this->json(['status' => 'Event created with convocations'], Response::HTTP_CREATED);
+        return $this->json(['status' => 'Event created'], Response::HTTP_CREATED);
     }
     
 
