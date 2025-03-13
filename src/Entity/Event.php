@@ -279,4 +279,9 @@ class Event
 
         return $this;
     }
+    #[Groups(['event:read'])]
+    public function getHasConvocations(): bool
+    {
+        return !$this->convocations->isEmpty();
+    }
 }
