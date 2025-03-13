@@ -284,4 +284,5 @@ class Event
     {
         return !$this->convocations->isEmpty();
     }
+    // modif
 }
