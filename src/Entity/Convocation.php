@@ -2,20 +2,33 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Get;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\ConvocationRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: ConvocationRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => ['convocation:read']],
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['convocation:write']],
+        ),
+        // Ajoutez d'autres opérations si nécessaire
+    ],
+)]
 class Convocation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['convocation:read', 'convocation:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -24,11 +37,12 @@ class Convocation
 
     #[ORM\ManyToOne(inversedBy: 'convocations')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['event:item:read'])]
+    #[Groups(['event:item:read', 'convocation:read', 'convocation:write'])]
     private ?Player $player = null;
 
     #[ORM\ManyToOne(inversedBy: 'convocations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['convocation:read', 'convocation:write'])]
     private ?Event $event = null;
 
     public function getId(): ?int

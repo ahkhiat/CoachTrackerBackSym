@@ -18,11 +18,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
-// #[ApiResource(
-//     normalizationContext: ['groups' => ['event:read']],
-//     denormalizationContext: ['groups' => ['event:write']],
-    
-// )]
 #[ApiResource(
     operations: [
         new GetCollection(
