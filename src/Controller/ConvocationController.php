@@ -2,19 +2,21 @@
 
 namespace App\Controller;
 
-use App\Entity\Convocation;
 use App\Entity\Event;
 use App\Entity\Player;
+use App\Entity\Convocation;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ConvocationController extends AbstractController
 {
     #[Route('/api/convocations/new', methods: ['POST'])]
-    public function createConvocations(Request $request, EntityManagerInterface $em): Response
+    public function createConvocations(Request $request, EntityManagerInterface $em, ValidatorInterface $validator): Response
     {
         $data = json_decode($request->getContent(), true);
         
@@ -39,6 +41,16 @@ class ConvocationController extends AbstractController
             $convocation->setEvent($event);
             $convocation->setPlayer($player);
             $convocation->setStatus(0); // status "pending"
+
+            // $errors = $validator->validate($convocation);
+            // if (count($errors) > 0) {
+            //     return $this->json(['error' => (string) $errors], 400);
+            // }
+            $errors = $validator->validate($convocation);
+
+            if (count($errors) > 0) {
+                return new JsonResponse(['error' => $errors[0]->getMessage()], 400);
+            }
 
             $em->persist($convocation);
 
