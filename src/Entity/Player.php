@@ -17,6 +17,7 @@ class Player
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['event:item:read', 'team:item:read'])]
     private ?int $id = null;
 
     /**
