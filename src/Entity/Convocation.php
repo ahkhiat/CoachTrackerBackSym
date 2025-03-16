@@ -24,8 +24,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
         // Ajoutez d'autres opérations si nécessaire
     ],
 )]
+#[ORM\UniqueConstraint(name: 'unique_convocation', columns: ['event_id', 'player_id'])]
 #[UniqueEntity(fields: ['event', 'player'], message: 'Ce joueur est déjà convoqué pour cet événement.')]
-
 class Convocation
 {
     #[ORM\Id]
