@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use App\Repository\ConvocationRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 #[ORM\Entity(repositoryClass: ConvocationRepository::class)]
@@ -23,6 +24,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         // Ajoutez d'autres opérations si nécessaire
     ],
 )]
+#[UniqueEntity(fields: ['event', 'player'], message: 'Ce joueur est déjà convoqué pour cet événement.')]
+
 class Convocation
 {
     #[ORM\Id]
