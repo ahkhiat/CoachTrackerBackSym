@@ -6,6 +6,7 @@ use App\Entity\Event;
 use App\Entity\Player;
 use App\Entity\Convocation;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\ConvocationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -64,4 +65,64 @@ class ConvocationController extends AbstractController
             'convocations' => count($convocations),
         ], Response::HTTP_CREATED);
     }
+
+    #[Route('/api/convocations/update', methods: ['PUT'])]
+    public function updateConvocations(Request $request, EntityManagerInterface $em, ValidatorInterface $validator): Response
+    {
+        $data = json_decode($request->getContent(), true);
+    
+        $event = $em->getRepository(Event::class)->find($data['eventId']);
+        if (!$event) {
+            return $this->json(['error' => 'Event not found'], Response::HTTP_BAD_REQUEST);
+        }
+    
+        if (!isset($data['playerIds']) || !is_array($data['playerIds'])) {
+            return $this->json(['error' => 'Player IDs are required and should be an array'], Response::HTTP_BAD_REQUEST);
+        }
+    
+        $existingConvocations = $em->getRepository(Convocation::class)->findBy(['event' => $event]);
+        $existingPlayerIds = array_map(fn($conv) => $conv->getPlayer()->getId(), $existingConvocations);
+    
+        $newPlayerIds = $data['playerIds'];
+    
+        foreach ($existingConvocations as $convocation) {
+            if (!in_array($convocation->getPlayer()->getId(), $newPlayerIds)) {
+                $em->remove($convocation);
+            }
+        }
+    
+        foreach ($newPlayerIds as $playerId) {
+            if (!in_array($playerId, $existingPlayerIds)) {
+                $player = $em->getRepository(Player::class)->find($playerId);
+                if (!$player) {
+                    return $this->json(['error' => 'Player not found for playerId: ' . $playerId], Response::HTTP_BAD_REQUEST);
+                }
+    
+                $convocation = new Convocation();
+                $convocation->setEvent($event);
+                $convocation->setPlayer($player);
+                $convocation->setStatus(0); // "pending"
+    
+                $errors = $validator->validate($convocation);
+                if (count($errors) > 0) {
+                    return new JsonResponse(['error' => $errors[0]->getMessage()], 400);
+                }
+    
+                $em->persist($convocation);
+            }
+        }
+    
+        $em->flush();
+    
+        return $this->json([
+            'status' => 'Convocations updated',
+            'convocations' => count($newPlayerIds),
+        ], Response::HTTP_OK);
+    }
+    
+
+
+
+
 }
+
