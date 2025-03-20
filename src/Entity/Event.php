@@ -280,4 +280,11 @@ class Event
         return !$this->convocations->isEmpty();
     }
     // modif
+
+    #[Groups(['event:collection:read'])]
+    public function getHasPresences(): bool
+    {
+        return !$this->presences->isEmpty();
+    }
+
 }
