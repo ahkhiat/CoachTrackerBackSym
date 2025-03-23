@@ -87,6 +87,22 @@ class Player
 
         return $this;
     }
+    public function getGoalsCountForCurrentYear(): int
+    {
+        $year = (new \DateTime())->format('Y');
+    
+        return $this->getGoals()->filter(function ($goal) use ($year) {
+            $eventDateString = $goal->getEvent()->getDate();
+            $eventDate = \DateTime::createFromFormat('Y-m-d\TH:i:sP', $eventDateString);
+    
+            if (!$eventDate) {
+                dump("Date invalide : " . $eventDateString);
+                return false;
+            }
+    
+            return $eventDate->format('Y') === $year;
+        })->count();
+    }
 
     /**
      * @return Collection<int, Presence>
@@ -116,6 +132,22 @@ class Player
         }
 
         return $this;
+    }
+    public function getPresencesCountForCurrentYear(): int
+    {
+        $year = (new \DateTime())->format('Y');
+    
+        return $this->getPresences()->filter(function ($presence) use ($year) {
+            $eventDateString = $presence->getEvent()->getDate();
+            $eventDate = \DateTime::createFromFormat('Y-m-d\TH:i:sP', $eventDateString);
+    
+            if (!$eventDate) {
+                dump("Date invalide : " . $eventDateString);
+                return false;
+            }
+    
+            return $eventDate->format('Y') === $year;
+        })->count();
     }
 
     public function getPlaysIn(): ?Team
@@ -170,5 +202,22 @@ class Player
         }
 
         return $this;
+    }
+    
+    public function getConvocationsCountForCurrentYear(): int
+    {
+        $year = (new \DateTime())->format('Y');
+    
+        return $this->getConvocations()->filter(function ($convocation) use ($year) {
+            $eventDateString = $convocation->getEvent()->getDate();
+            $eventDate = \DateTime::createFromFormat('Y-m-d\TH:i:sP', $eventDateString);
+    
+            if (!$eventDate) {
+                dump("Date invalide : " . $eventDateString);
+                return false;
+            }
+    
+            return $eventDate->format('Y') === $year;
+        })->count();
     }
 }
