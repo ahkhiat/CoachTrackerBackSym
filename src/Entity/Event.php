@@ -46,6 +46,7 @@ class Event
 
     private ?\DateTime $date = null;
 
+
     /**
      * @var Collection<int, Goal>
      */
@@ -123,6 +124,26 @@ class Event
         $this->date = $date;
 
         return $this;
+    }
+
+
+    #[Groups(['event:collection:read', 'event:item:read'])]
+    public function getIsInProgress(): bool
+    {
+        $now = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+
+        $now->setTime($now->format('H'), $now->format('i'), 0); 
+
+        $startTime = (clone $this->date)->setTimezone(new \DateTimeZone('UTC'));
+        $endTime = (clone $startTime)->modify("+2 hours"); 
+
+        $endTime->setTime($endTime->format('H'), $endTime->format('i'), 0);
+
+        // dump("Now (UTC): " . $now->format('Y-m-d H:i:s'));
+        // dump("Start (UTC): " . $startTime->format('Y-m-d H:i:s'));
+        // dump("End (UTC): " . $endTime->format('Y-m-d H:i:s'));
+
+        return $now >= $startTime && $now <= $endTime;
     }
 
     /**
