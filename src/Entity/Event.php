@@ -139,9 +139,9 @@ class Event
 
         $endTime->setTime($endTime->format('H'), $endTime->format('i'), 0);
 
-        // dump("Now (UTC): " . $now->format('Y-m-d H:i:s'));
-        // dump("Start (UTC): " . $startTime->format('Y-m-d H:i:s'));
-        // dump("End (UTC): " . $endTime->format('Y-m-d H:i:s'));
+        dump("Now (UTC): " . $now->format('Y-m-d H:i:s'));
+        dump("Start (UTC): " . $startTime->format('Y-m-d H:i:s'));
+        dump("End (UTC): " . $endTime->format('Y-m-d H:i:s'));
 
         return $now >= $startTime && $now <= $endTime;
     }
