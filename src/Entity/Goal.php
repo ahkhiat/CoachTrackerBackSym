@@ -5,8 +5,10 @@ namespace App\Entity;
 use ApiPlatform\Metadata\Get;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\GoalRepository;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: GoalRepository::class)]
@@ -21,6 +23,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         // Ajoutez d'autres opérations si nécessaire
     ],
 )]
+#[ApiFilter(SearchFilter::class, properties: ['event' => 'exact'])]
 class Goal
 {
     #[ORM\Id]
