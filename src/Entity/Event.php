@@ -37,7 +37,7 @@ class Event
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['event:collection:read', 'event:item:read'])]
+    #[Groups(['event:collection:read', 'event:item:read', 'goal:collection:read', 'goal:item:read'])]
 
     private ?int $id = null;
 

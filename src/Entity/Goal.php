@@ -2,12 +2,25 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use App\Repository\GoalRepository;
+use ApiPlatform\Metadata\Get;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\GoalRepository;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: GoalRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => ['goal:collection:read']],
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['goal:item:read']],
+        ),
+        // Ajoutez d'autres opérations si nécessaire
+    ],
+)]
 class Goal
 {
     #[ORM\Id]
@@ -16,14 +29,17 @@ class Goal
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['goal:collection:read', 'goal:item:read'])]
     private ?int $minute_goal = null;
 
     #[ORM\ManyToOne(inversedBy: 'goals')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['goal:collection:read', 'goal:item:read'])]
     private ?Player $player = null;
 
     #[ORM\ManyToOne(inversedBy: 'goals')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['goal:collection:read', 'goal:item:read'])]
     private ?Event $event = null;
 
     public function getId(): ?int

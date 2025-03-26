@@ -17,7 +17,7 @@ class Player
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['event:item:read', 'team:item:read'])]
+    #[Groups(['event:item:read', 'team:item:read', 'goal:collection:read', 'goal:item:read'])]
     private ?int $id = null;
 
     /**
@@ -37,7 +37,7 @@ class Player
 
     #[ORM\OneToOne(inversedBy: 'player', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['event:item:read', 'team:item:read'])]
+    #[Groups(['event:item:read', 'team:item:read', 'goal:collection:read', 'goal:item:read'])]
     private ?User $user = null;
 
     /**
