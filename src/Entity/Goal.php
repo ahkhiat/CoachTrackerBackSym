@@ -29,6 +29,7 @@ class Goal
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['goal:collection:read', 'goal:item:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
