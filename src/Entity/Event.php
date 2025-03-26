@@ -130,18 +130,28 @@ class Event
     #[Groups(['event:collection:read', 'event:item:read'])]
     public function getIsInProgress(): bool
     {
-        $now = new \DateTime('now', new \DateTimeZone('UTC'));
-
+        
+        $now = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
         $now->setTime($now->format('H'), $now->format('i'), 0); 
 
-        $startTime = (clone $this->date)->setTimezone(new \DateTimeZone('UTC'));
-        $endTime = (clone $startTime)->modify("+2 hours"); 
-
+        $startTime = \DateTime::createFromFormat('Y-m-d\TH:i:sP', $this->date->format('Y-m-d\TH:i:sP'));
+        $startTime->setTime($startTime->format('H'), $startTime->format('i'), 0); 
+        
+        $endTime = (clone $startTime)->modify("+2 hours");
         $endTime->setTime($endTime->format('H'), $endTime->format('i'), 0);
+        
+        // dump("Now (): " . $now->format('Y-m-d H:i:s'));
+        // dump("Start (): " . $startTime->format('Y-m-d H:i:s'));
+        // dump("End (): " . $endTime->format('Y-m-d H:i:s'));
 
-        dump("Now (UTC): " . $now->format('Y-m-d H:i:s'));
-        dump("Start (UTC): " . $startTime->format('Y-m-d H:i:s'));
-        dump("End (UTC): " . $endTime->format('Y-m-d H:i:s'));
+        // dump([
+        //     'now' => $now->format('Y-m-d H:i:s'),
+        //     'start' => $startTime->format('Y-m-d H:i:s'),
+        //     'end' => $endTime->format('Y-m-d H:i:s'),
+        //     'now >= start' => var_export($now >= $startTime, true),
+        //     'now <= end' => var_export($now <= $endTime, true),
+        //     'final_result' => var_export($now >= $startTime && $now <= $endTime, true),
+        // ]);
 
         return $now >= $startTime && $now <= $endTime;
     }
