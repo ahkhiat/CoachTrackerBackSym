@@ -130,7 +130,7 @@ class Event
     #[Groups(['event:collection:read', 'event:item:read'])]
     public function getIsInProgress(): bool
     {
-        $now = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+        $now = new \DateTime('now', new \DateTimeZone('UTC'));
 
         $now->setTime($now->format('H'), $now->format('i'), 0); 
 
