@@ -20,6 +20,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Get(
             normalizationContext: ['groups' => ['goal:item:read']],
         ),
+        new Delete()
         // Ajoutez d'autres opérations si nécessaire
     ],
 )]
